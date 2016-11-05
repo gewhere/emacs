@@ -1,0 +1,492 @@
+;; FAQ EMACS
+;; http://www.gnu.org/software/emacs/manual/html_mono/efaq.html
+
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(package-initialize)
+;;(add-to-list 'load-path "~/src/org-mode/contrib/lisp/")
+;;
+;; COLOR THEMES
+;; solarized-dark
+(load-theme 'solarized-dark t)
+;; (load-theme 'zenburn t)
+;; (load-theme 'tango-dark t)
+
+
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ;; org-reveal
+;; (require 'ox-reveal)
+;; (require 'ox-latex)
+;; (require 'ox-beamer)
+;; ;; (require 'org-export-as-s5)
+
+;; FINNISH KBD
+(setq mac-option-modifier nil
+      mac-command-modifier 'meta
+      x-select-enable-clipboard t)
+
+;; ;;; ORGMODE - GRAPHVIZ-----------------------------------------
+;; (require 'package)
+;; BABEL
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '(
+   (matlab . t)
+   (latex . t)
+   (emacs-lisp . t)
+   (python . t)
+   (R . t)
+))
+
+;; kbd SHORTCUTS
+(global-set-key (kbd "C-c a") 'org-agenda)
+;;
+(tool-bar-mode -1)    ; turn off the toolbar
+(scroll-bar-mode -1)  ; turn off the scrollbar
+;(menu-bar-mode -1)    ; turn off the menu bar
+(blink-cursor-mode 0) ; stop the blinking cursor
+(xterm-mouse-mode t)  ; Enable mouse in terminal
+
+;;;;;;;;;;
+;; SET ZOOM IN/OUT GLOBALLY
+;; http://www.emacswiki.org/emacs/GlobalTextScaleMode
+(define-globalized-minor-mode
+  global-text-scale-mode
+  text-scale-mode
+  (lambda () (text-scale-mode 1)))
+
+(defun global-text-scale-adjust (inc) (interactive)
+  (text-scale-set 1)
+  (kill-local-variable 'text-scale-mode-amount)
+  (setq-default text-scale-mode-amount (+ text-scale-mode-amount inc))
+  (global-text-scale-mode 1)
+)
+;;
+(global-set-key (kbd "s-0")
+                '(lambda () (interactive)
+                   (global-text-scale-adjust (- text-scale-mode-amount))
+                   (global-text-scale-mode -1)))
+(global-set-key (kbd "s-+")
+                '(lambda () (interactive) (global-text-scale-adjust 1)))
+(global-set-key (kbd "s--")
+                '(lambda () (interactive) (global-text-scale-adjust -1)))
+
+;; GLOBAL KEYS
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+(global-set-key (kbd "C-;") 'comment-or-uncomment-region)
+(global-set-key (kbd "C-x p") 'previous-multiframe-window)
+(global-set-key (kbd "C-c t") 'ansi-term)
+;; switch widow
+;; (require 'switch-window)
+(global-set-key (kbd "C-x o") 'switch-window)
+;; UNDO-TREE
+(require 'undo-tree)
+(global-undo-tree-mode 1)
+
+;; HIGHLIGHT CURRENT LINE
+(global-hl-line-mode 1)
+
+;; ;; RECENTF
+(require 'recentf)
+(recentf-mode 1)
+;;;;;;;;;
+
+;; IDO FROM FOIVOS
+(require 'ido)
+(require 'flx-ido)
+(setq ido-enable-prefix nil
+      ido-enable-flex-matching t
+      ido-create-new-buffer 'always
+      ido-use-filename-at-point 'guess)
+;; ido-max-prospects 10
+;; ido-save-directory-list-file (expand-file-name "ido.hist" prelude-savefile-dir)
+;; ido-default-file-method 'selected-window
+;; ido-auto-merge-work-directories-length -1)
+(ido-mode +1)
+;; smarter fuzzy matching for ido
+(flx-ido-mode +1)
+;;;
+;; DIRED + IMENU
+;; (require 'ido)
+;; (require 'flx-ido)
+;; (require 'imenu+)
+(require 'auto-complete)
+;; (ido-mode t)
+;; (ido-vertical-mode t)
+;; (icicle-mode)
+
+(require 'dired+)
+;; (require 'icicles)
+
+
+;; ;; disable ido faces to see flx highlights
+;; ;; (setq ido-use-faces nil)
+
+
+;; ;;; smex, remember recently and most frequently used commands
+;; ;; (require 'smex)
+;; ;; ;; (setq smex-save-file (expand-file-name ".smex-items" prelude-savefile-dir))
+;; ;; (smex-initialize)
+;; ;; (global-set-key (kbd "M-x") 'smex)
+;; ;; (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; ;;;-----------------------------------------------------
+
+
+;;------------------------------
+;; QUAIL COMPLETIONS
+(require 'quail)
+;;------------------------------
+;; Set stuff
+(setq
+ inhibit-startup-echo-area-message t      ; Disable startup message
+ inhibit-startup-message t                ; Disable splash screen
+ color-theme-is-global t                  ; Use color theme everywheere
+ shift-select-mode t                      ; Enable shift select mode
+ uniquify-buffer-name-style 'post-forward ; Make buffer name unique
+ ; Side by Side diffs in ediff
+ ediff-split-window-function 'split-window-horizontally
+ ; Don't diff in seperate frames
+ ediff-window-setup-function 'ediff-setup-windows-plain
+ diff-switches "-u"                       ; Pass -u to diff
+ ; set the file to remember my position in files
+ save-place-file (concat user-emacs-directory "places")
+ ; set the backups directory (this way we don't get *~ files everywhere)
+ backup-directory-alist `((".*" . ,(expand-file-name
+                                    (concat user-emacs-directory
+                                            "backups"))))
+ ; set the autosave directory (this way we don't have .##* files everywhere)
+ auto-save-file-name-transforms `((".*" ,(expand-file-name
+                                          (concat user-emacs-directory
+                                                  "auto-save-list/\\1")) t))
+)
+
+;; Save place in files between sessions. When you reopen a file the
+;; cursor is where it used to be when you last edited this file
+(require 'saveplace)
+(setq-default save-place t)
+
+(global-auto-revert-mode t)   ; autorefresh files if they change on disk
+;; auto format paragraphs in text-mode
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
+
+;; (setq user-full-name "Georgios Diapoulis")
+
+;; Spaces/Tabs
+(setq-default indent-tabs-mode nil) ; use spaces instead of tabs for indentation
+(setq-default tab-width 2)          ; use 2 spaces instead of 8 for indentation
+
+;; Delete whitespace at the end of lines when saving
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+(defalias 'yes-or-no-p 'y-or-n-p) ; y and n instead of yes and no
+(column-number-mode t)            ; Show column in status-bar
+(line-number-mode t)              ; Show line in status-bar
+(delete-selection-mode 1)         ; make typing override text selection
+
+
+;; ;;==============================================================================
+;; ;;==============================================================================
+;; ;; ADD THIS IN A DIFFERENT FILE AND LOAD FROM THERE
+
+;; (set-fontset-font "fontset-default"
+;;                   'greek
+;;                   '("Times" . "iso8859-7"))
+
+
+
+;; ;; ;; FROM IANI
+;; ;; ;; https://github.com/iani/emacs-prelude/blob/master/user/iani.org
+;; ;; ;; IMENU - IDO
+;; ;; ;;; ido-imenu
+;; ;; (defun ido-imenu ()
+;; ;;   "Update the imenu index and then use ido to select a symbol to navigate to.
+;; ;; Symbols matching the text at point are put first in the completion list."
+;; ;;   (interactive)
+;; ;;   (imenu--make-index-alist)
+;; ;;   (let ((name-and-pos '())
+;; ;;         (symbol-names '()))
+;; ;;     (flet ((addsymbols
+;; ;;           (symbol-liost)
+;; ;;           (when (listp symbol-list)
+;; ;;             (dolist (symbol symbol-list)
+;; ;;               (let ((name nil) (position nil))
+;; ;;                 (cond
+;; ;;                  ((and (listp symbol) (imenu--subalist-p symbol))
+;; ;;                   (addsymbols symbol))
+
+;; ;;                  ((listp symbol)
+;; ;;                   (setq name (car symbol))
+;; ;;                   (setq position (cdr symbol)))
+
+;; ;;                  ((stringp symbol)
+;; ;;                   (setq name symbol)
+;; ;;                   (setq position
+;; ;;                         (get-text-property 1 'org-imenu-marker symbol))))
+
+;; ;;                 (unless (or (null position) (null name))
+;; ;;                   (add-to-list 'symbol-names name)
+;; ;;                   (add-to-list 'name-and-pos (cons name position))))))))
+;; ;;       (addsymbols imenu--index-alist))
+;; ;; ;; If there are matching symbols at point, put them at the beginning of `symbol-names'.
+;; ;;     (let ((symbol-at-point (thing-at-point 'symbol)))
+;; ;;       (when symbol-at-point
+;; ;;         (let* ((regexp (concat (regexp-quote symbol-at-point) "$"))
+;; ;;                (matching-symbols
+;; ;;                 (delq nil (mapcar (lambda (symbol)
+;; ;;                                     (if (string-match regexp symbol) symbol))
+;; ;;                                   symbol-names))))
+;; ;;           (when matching-symbols
+;; ;;             (sort matching-symbols (lambda (a b) (> (length a) (length b))))
+;; ;;             (mapc
+;; ;;              (lambda (symbol)
+;; ;;                (setq symbol-names (cons symbol (delete symbol symbol-names))))
+;; ;;              matching-symbols)))))
+;; ;;     (let* ((selected-symbol (ido-completing-read "Symbol? " symbol-names))
+;; ;;            (position (cdr (assoc selected-symbol name-and-pos))))
+;; ;;       (goto-char position))))
+
+;; ;; ;; Push mark when using ido-imenu
+
+;; ;; (defvar push-mark-before-goto-char nil)
+
+;; ;; (defadvice goto-char (before push-mark-first activate)
+;; ;;   (when push-mark-before-goto-char
+;; ;;     (push-mark)))
+
+;; ;; (defun ido-imenu-push-mark ()
+;; ;;   (interactive)
+;; ;;   (let ((push-mark-before-goto-char t))
+;; ;;     (ido-imenu)))
+;; ;; ;;
+;; ;; ;;;;;;;;;;;;;;;;;;;;;;
+
+
+;; ;; XELATEX =======================================
+;; (require 'ox-latex)
+;; ;;; XeLaTeX customisations
+;; ;; remove "inputenc" from default packages as it clashes with xelatex
+;; (setf org-latex-default-packages-alist
+;;       (remove '("AUTO" "inputenc" t) org-latex-default-packages-alist))
+;; ;; the sexp below will also work in this case. But it is not robust as it
+;; ;; pops the first element regardless if its a match or not.
+;; ;; (pop org-latex-default-packages-alist)
+
+;; (add-to-list 'org-latex-packages-alist '("" "xltxtra" t))
+;; ;; choose Linux Libertine O as serif and Linux Biolinum O as sans-serif fonts
+;; (add-to-list 'org-latex-packages-alist '("" "libertine" t))
+;; ;; commented for now as preferable to set per file for now
+;; ;; (add-to-list 'org-latex-packages-alist '("" "unicode-math" t))
+;; ;; (add-to-list 'org-latex-packages-alist
+;; ;; 	     "\\setmathfont{Linux Libertine}" t) ; needed for unicode-math
+
+;; ;; org to latex customisations, -shell-escape needed for minted
+;; (setq org-export-dispatch-use-expert-ui t ; non-intrusive export dispatch
+;;       org-latex-pdf-process		; for regular export
+;;       '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+;; 	"xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+;; 	"xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
+;; ;; export single chapter
+;; (add-to-list 'org-latex-classes
+;; 	     '("chapter" "\\documentclass[11pt]{report}"
+;; 	       ("\\chapter{%s}" . "\\chapter*{%s}")
+;; 	       ("\\section{%s}" . "\\section*{%s}")
+;; 	       ("\\subsection{%s}" . "\\subsection*{%s}")
+;; 	       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+
+;; ;; FIXME: doesn't work because of \hypersetup, \tableofcontents, etc.
+;; ;; minimal export with the new exporter (maybe use the standalone class?)
+;; (add-to-list 'org-latex-classes
+;;              '("minimal"
+;;                "\\documentclass\{minimal\}\n[NO-DEFAULT-PACKAGES]\n[NO-PACKAGES]"
+;;                ("\\section\{%s\}" . "\\section*\{%s\}")
+;;                ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
+;;                ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
+
+;; ;; ;; beamer export with the new exporter
+;; ;; (add-to-list 'org-beamer-environments-extra
+;; ;; 	     '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
+
+;; ;; (add-to-list 'org-beamer-environments-extra
+;; ;; 	     '("boldH" "h" "\\textbf{%h}" "%%%%"))
+
+;; ;; (add-to-list 'org-beamer-environments-extra
+;; ;; 	     '("phantom" "P" "\\phantom{%h}" ""))
+
+;; ;; (add-to-list 'org-export-snippet-translation-alist
+;; ;; 	     '("b" . "beamer"))
+;; (add-to-list 'org-export-snippet-translation-alist
+;; 	     '("l" . "latex"))
+;; (add-to-list 'org-export-snippet-translation-alist
+;; 	     '("h" . "html"))
+;; (add-to-list 'org-export-snippet-translation-alist
+;; 	     '("o" . "odt"))
+
+;; ;; ;; filters for markups
+;; ;; (defun sa-beamer-bold (contents backend info)
+;; ;;   (when (org-export-derived-backend-p backend 'beamer)
+;; ;;     (replace-regexp-in-string "\\`\\\\[A-Za-z0-9]+" "\\\\textbf" contents)))
+
+;; ;; (add-to-list 'org-export-filter-bold-functions 'sa-beamer-bold)
+
+;; ;; (defun sa-beamer-structure (contents backend info)
+;; ;;   (when (org-export-derived-backend-p backend 'beamer)
+;; ;;     (replace-regexp-in-string "\\`\\\\[A-Za-z0-9]+" "\\\\structure" contents)))
+
+;; ;; (add-to-list 'org-export-filter-strike-through-functions 'sa-beamer-structure)
+;; ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; END XELATEX
+
+
+;; ;; ;; ORG BABEL CONFIG
+;; ;; (defun org-insert-src-block (src-code-type)
+;; ;;   "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
+;; ;;   (interactive
+;; ;;    (let ((src-code-types
+;; ;;           '("emacs-lisp" "python" "C" "sh" "org" "perl")))
+;; ;;      (list (ido-completing-read "Source code type: " src-code-types))))
+;; ;;   (progn
+;; ;;     (newline-and-indent)
+;; ;;     (insert (format "#+BEGIN_SRC %s\n" src-code-type))
+;; ;;     (newline-and-indent)
+;; ;;     (insert "#+END_SRC\n")
+;; ;;     (previous-line 2)
+;; ;; ;;    (org-edit-src-code)
+;; ;; ))
+
+;; ;; (add-hook 'org-mode-hook '(lambda ()
+;; ;;                             (local-set-key (kbd "C-c h")
+;; ;;                                            'org-insert-src-block)))
+
+
+;; ;; (global-set-key (kbd "C-c h a")
+;; ;;                 'org-insert-src-block)
+
+;; ;; (add-hook 'org-mode-hook '(lambda ()
+;; ;;                             ;; turn on flyspell-mode by default
+;; ;;                             ;; (flyspell-mode 1)
+;; ;;                             ;; ;; C-TAB for expanding
+;; ;;                             ;; (local-set-key (kbd "C-<tab>")
+;; ;;                             ;;                'yas/expand-from-trigger-key)
+;; ;;                             ;; keybinding for editing source code blocks
+;; ;;                             (local-set-key (kbd "C-c h e")
+;; ;;                                            'org-edit-src-code)
+;; ;;                             ;; keybinding for inserting code blocks
+;; ;;                             (local-set-key (kbd "C-c h a")
+;; ;;                                            'org-insert-src-block)
+;; ;;                             ))
+
+
+;; ;;; -- http://comments.gmane.org/gmane.emacs.orgmode/61133
+
+;; ;; 	    (path (cond
+;; ;; 		   ((member type '("coderef"))
+;; ;; 		    raw-path)
+;; ;; 		   ((member type '("http" "https" "ftp"))
+;; ;; 		    (concat type ":" raw-path))
+;; ;; 		   ((and re-radio (string-match re-radio raw-path))
+;; ;; 		    (setq radiop t))
+;; ;; 		   ((equal type "mailto")
+;; ;; 		    (concat type ":" raw-path))
+;; ;; 		   ((equal type "file")
+;; ;; 		    (if (and (org-file-image-p
+;; ;; 			      (expand-file-name
+;; ;; 			       raw-path)
+;; ;; 			      org-export-latex-inline-image-extensions)
+;; ;; 			     (or (get-text-property 0 'org-no-description
+;; ;; 						    raw-path)
+;; ;; 				 (equal desc full-raw-path)))
+;; ;; 			(setq imgp t)
+;; ;; 		      (progn (when (string-match "\\(.+\\)::.+" raw-path)
+;; ;; 			       (setq raw-path (match-string 1 raw-path)))
+;; ;; 			     (if (file-exists-p raw-path)
+
+;; ;; ; hjh editorial comment: It's mandatory... oops!
+;; ;; ; expand-file-name is a built-in function in `C source code'.
+;; ;; ; (expand-file-name NAME &optional DEFAULT-DIRECTORY)
+;; ;; ; ***Convert filename NAME to absolute***, and canonicalize it.
+
+;; ;; 				 (concat type "://" (expand-file-name raw-path))
+;; ;; 			       (concat type "://" (org-export-directory
+;; ;; 						   :LaTeX org-export-latex-options-plist)
+;; ;; 				       raw-path))))))))
+;; ;; ;;=========================
+
+
+;; ;; (require 'ox-latex)
+
+;; ;; (require 'org-latex)
+;; ;;     (setq org-export-latex-listings t)
+;; ;;     ;; Originally taken from Bruno Tavernier: \ http://thread.gmane.org/gmane.emacs.orgmode/31150/focus=31432
+;; ;;     ;; but adapted to use latexmk 4.20 or higher.
+;; ;;     (defun my-auto-tex-cmd ()
+;; ;;       "When exporting from .org with latex, automatically run latex,
+;; ;;        pdflatex, or xelatex as appropriate, using latexmk."
+;; ;;       (let ((texcmd)))
+;; ;;       ;; default command: oldstyle latex via dvi
+;; ;;       (setq texcmd "latexmk -dvi -pdfps %f")
+;; ;;       ;; pdflatex -> .pdf
+;; ;;       (if (string-match "LATEX_CMD: pdflatex" (buffer-string))
+;; ;;           (setq texcmd "latexmk -pdf %f"))
+;; ;;       ;; xelatex -> .pdf
+;; ;;       (if (string-match "LATEX_CMD: xelatex" (buffer-string))
+;; ;;           (setq texcmd "latexmk -pdflatex=xelatex -pdf %f"))
+;; ;;       ;; LaTeX compilation command
+;; ;;       (setq org-latex-to-pdf-process (list texcmd)))
+;; ;;       (add-hook 'org-export-latex-after-initial-vars-hook 'my-auto-tex-cmd)
+;; ;;       ;; Default packages included in every tex file, pdflatex or xelatex
+;; ;;       (setq org-export-latex-packages-alist
+;; ;;       '(("" "graphicx" t)
+;; ;;       ("" "longtable" nil)
+;; ;;       ("" "float" nil)))
+
+;; ;;       (defun my-auto-tex-parameters ()
+;; ;;       "Automatically select the tex packages to include."
+;; ;;       ;; default packages for ordinary latex or pdflatex export
+;; ;;       (setq org-export-latex-default-packages-alist
+;; ;;       '(("AUTO" "inputenc" t)
+;; ;;       ("T1"   "fontenc"   t)
+;; ;;       (""     "fixltx2e"  nil)
+;; ;;       (""     "wrapfig"   nil)
+;; ;;       (""     "soul"      t)
+;; ;;       (""     "textcomp"  t)
+;; ;;       (""     "marvosym"  t)
+;; ;;       (""     "wasysym"   t)
+;; ;;       (""     "latexsym"  t)
+;; ;;       (""     "amssymb"   t)
+;; ;;       (""     "hyperref"  nil)))
+
+;; ;;         ;; Packages to include when xelatex is used
+;; ;;         ;; (see https://github.com/kjhealy/latex-custom-kjh for the
+;; ;;         ;; non-standard ones.)
+;; ;;         (if (string-match "LATEX_CMD: xelatex" (buffer-string))
+;; ;;             (setq org-export-latex-default-packages-alist
+;; ;;                   '(("" "fontspec" t)
+;; ;;                     ("" "xunicode" t)
+;; ;;                     ("" "url" t)
+;; ;;                     ("" "rotating" t)
+;; ;;                     ("" "memoir-article-styles" t)
+;; ;;                     ("american" "babel" t)
+;; ;;                     ("babel" "csquotes" t)
+;; ;;                     ("" "listings" nil)
+;; ;;                     ("" "listings-sweave-xelatex" nil)
+;; ;;                     ("svgnames" "xcolor" t)
+;; ;;                     ("" "soul" t)
+;; ;;                     ("xetex, colorlinks=true, urlcolor=FireBrick, plainpages=false, pdfpagelabels, bookmarksnumbered" "hyperref" nil)
+;; ;;                     )))
+
+;; ;;         (if (string-match "LATEX_CMD: xelatex" (buffer-string))
+;; ;;         (setq org-export-latex-classes
+;; ;;         (cons '("article"
+;; ;;         "\\documentclass[11pt,article,oneside]{memoir}
+;; ;;         \\input{vc}
+;; ;;         \\usepackage[style=authoryear-comp-ajs, abbreviate=true]{biblatex}
+;; ;;         \\bibliography{socbib}"
+;; ;;         ("\\section{%s}" . "\\section*{%s}")
+;; ;;         ("\\subsection{%s}" . "\\subsection*{%s}")
+;; ;;         ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+;; ;;         ("\\paragraph{%s}" . "\\paragraph*{%s}")
+;; ;;         ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+;; ;;         org-export-latex-classes))))
+
+;; ;;         (add-hook 'org-export-latex-after-initial-vars-hook 'my-auto-tex-parameters)
