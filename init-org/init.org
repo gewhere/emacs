@@ -78,6 +78,7 @@
 #+END_SRC
 
 * SClang
+** Emacs config
 #+BEGIN_SRC emacs-lisp
 ;; SCLANG
 (require 'sclang)
@@ -91,6 +92,38 @@
 (global-set-key "\<" 'skeleton-pair-insert-maybe)
 (setq skeleton-pair 1)
 ;; end for sc-lang
+#+END_SRC
+
+** Org babel sclang
+#+BEGIN_SRC emacs-lisp
+(require 'org)
+(require 'ob)
+
+(require 'sclang-interp)
+
+(defgroup ob-sclang nil
+  "org-mode blocks for SuperCollider SCLang."
+  :group 'org)
+
+(defun org-babel-execute:sclang (body params)
+  "Org-mode Babel sclang hook for evaluate `BODY' with `PARAMS'."
+  (unless (or (equal (buffer-name) sclang-post-buffer)
+              (sclang-get-process))
+    (sclang-start))
+
+  (sclang-eval-string body t))
+
+(defvar org-babel-default-header-args:sclang nil)
+
+(setq org-babel-default-header-args:sclang
+      '((:session . "*SCLang:Workspace*")
+        (:output . "none")) ; TODO: temporary can't find way to let sclang output to stdout for org-babel.
+      )
+
+(with-eval-after-load "org"
+  (add-to-list 'org-src-lang-modes '("sclang" . sclang)))
+
+(provide 'ob-sclang)
 #+END_SRC
 
 * Clisp
