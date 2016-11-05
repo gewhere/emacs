@@ -1,0 +1,493 @@
+
+(setq user-full-name "Georgios Diapoulis")
+
+;; load orgmode
+(add-to-list 'load-path "~/sources/org2jekyll-0.0.7/")
+(add-to-list 'load-path "~/sources/org-js/")
+
+;; THEMES
+(setq prelude-theme 'nil)
+
+;; tangotango
+(add-to-list 'custom-theme-load-path "~/sources/color-theme-tangotango")
+(load-theme 'tangotango t)
+
+
+;; powerline
+(add-to-list 'load-path "~/sources/emacs-powerline")
+(require 'powerline)
+
+;; moe theme for powerline
+(add-to-list 'custom-theme-load-path "~/sources/moe-theme.el/")
+(add-to-list 'load-path "~/sources/moe-theme.el/")
+(require 'moe-theme)
+
+(moe-dark)
+
+(global-set-key (kbd "C-c h w") 'whitespace-mode)
+(global-set-key (kbd "C-c h l") 'visual-line-mode)
+
+(setq org-src-fontify-natively t)
+
+;; set visible bell
+(setq visible-bell t)
+
+;; guru mode
+(setq guru-warn-only nil)
+
+;; magit
+(setq magit-auto-revert-mode nil)
+
+;; Config TRAMP & SSH
+(setq tramp-default-method "ssh")
+
+;; Escape sequences
+;; http://emacs.stackexchange.com/questions/977/shiftup-isnt-recognized-by-emacs-in-a-terminal
+;; change window
+(define-key input-decode-map "\e[1;2A" [S-up])
+(define-key input-decode-map "\e[1;2B" [S-down])
+(define-key input-decode-map "\e[1;2C" [S-right])
+(define-key input-decode-map "\e[1;2D" [S-left])
+;; highlight
+(define-key input-decode-map "\e;2E" [C-S-e])     ;; end-of-line
+(define-key input-decode-map "\e;2A" [C-S-a])     ;; beginning-of-line
+(define-key input-decode-map "\e;2P" [C-S-p])
+(define-key input-decode-map "\e;2N" [C-S-n])
+;; shift-<return>
+(define-key input-decode-map "\e;2M" [C-return])
+
+;; SCLANG
+(require 'sclang)
+;;-- skeleton pair insertion for brackets and stuff
+(global-set-key "\"" 'skeleton-pair-insert-maybe)
+(global-set-key "\'" 'skeleton-pair-insert-maybe)
+(global-set-key "\`" 'skeleton-pair-insert-maybe)
+(global-set-key "\{" 'skeleton-pair-insert-maybe)
+(global-set-key "\[" 'skeleton-pair-insert-maybe)
+(global-set-key "\(" 'skeleton-pair-insert-maybe)
+(global-set-key "\<" 'skeleton-pair-insert-maybe)
+(setq skeleton-pair 1)
+;; end for sc-lang
+
+(setq inferior-lisp-program "clisp -K base")
+
+;;; CODE
+(setq magit-auto-revert-mode nil)
+
+;; The risk is not as high as it might seem.  Snapshots on MELPA
+;; and MELPA-Stable have had this enabled for a long time, so if
+;; you have not experienced any data loss in the past, you should
+;; probably keep this enabled.
+
+;; Keeping this mode enabled is only problematic if you, for
+;; example, use `git reset --hard REV' or `magit-reset-head-hard'
+;; and expect Emacs to preserve the old state of some file in a
+;; buffer.  If you turn off this mode then file-visiting buffers and
+;; the Magit buffer will no longer be in sync, which can be confusing
+;; and would complicate many operations.  Note that it is possible
+;; to undo an automatic buffer reversion using `C-x u' (`undo').
+
+;; To prevent this message from being shown each time you start
+;; Emacs, you must add the following line to your init file:
+
+(setq magit-last-seen-setup-instructions "1.4.0")
+
+;;; package -- summary
+;; CSS style from Sacha Chua
+;;
+;; Commentary
+;; (setq org-startup-indented t) ;; auto-indent text in subtrees
+;; http://pages.sachachua.com/.emacs.d/Sacha.html
+(setq org-html-head "<link rel=\"stylesheet\" type=\"text/css\"
+href=\"http://sachachua.com/blog/wp-content/themes/sacha-v3/foundation/css/foundation.min.css\"></link>
+<link rel=\"stylesheet\" type=\"text/css\" href=\"http://sachachua.com/org-export.css\"></link>
+<link rel=\"stylesheet\" type=\"text/css\" href=\"http://sachachua.com/blog/wp-content/themes/sacha-v3/style.css\"></link>
+<script src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js\"></script>")
+(setq org-html-htmlize-output-type 'css)
+(setq org-src-fontify-natively t)
+;; ;;;;;;
+;; FOOTER
+;; this is responsible to make the window on the bottom-right with author-email information
+(setq org-html-preamble "<a name=\"top\" id=\"top\"></a>")
+(setq org-html-postamble "
+<style type=\"text/css\">
+.back-to-top {
+    position: fixed;
+    bottom: 2em;
+    right: 0px;
+    text-decoration: none;
+    color: #000000;
+    background-color: rgba(235, 235, 235, 0.80);
+    font-size: 12px;
+    padding: 1em;
+    display: none;
+}
+
+.back-to-top:hover {
+    background-color: rgba(135, 135, 135, 0.50);
+}
+</style>
+
+<div class=\"back-to-top\">
+<a href=\"#top\">Back to top</a> | <a href=\"mailto:gediapou@student.jyu.fi\">E-mail me</a>
+<p></p>
+<center>
+<a href=\"http://users.jyu.fi/~gediapou\">Georgios Diapoulis</a>
+</center>
+</div>
+
+<script type=\"text/javascript\">
+    var offset = 220;
+    var duration = 500;
+    jQuery(window).scroll(function() {
+        if (jQuery(this).scrollTop() > offset) {
+            jQuery('.back-to-top').fadeIn(duration);
+        } else {
+            jQuery('.back-to-top').fadeOut(duration);
+        }
+    });
+</script>")
+
+;;; Comments
+
+;;; Code
+;; ;; Haskell-mode
+;; (add-to-list 'load-path "~/sources/haskell-mode") -- Here is the git source
+(add-hook 'haskell-mode-hook 'haskell-indentation-mode)
+(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+
+;; set path for ditaa.jar
+(setq org-ditaa-jar-path "~/sources/ditaa/scripts/ditaa.jar")
+;; the source of ditaa.jar is also here, thought both are 0.9 version so it's OK
+;;(setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0.9.jar")
+
+;; loading EES for R support
+(add-to-list 'load-path "~/sources/ESS/lisp/")
+(load "ess-site")
+
+;; Set python2 for python
+(setq org-babel-python-command "python2")
+
+;; colorized src blocks
+;; (setq org-src-fontify-natively t)
+;; (setq org-html-htmlize-output-type 'css)
+;; (setq org-src-window-setup 'current-window-configuration)
+
+;; Load Babel languages
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)
+   (octave . t)
+   (dot . t)
+   (gnuplot . t)
+   (R . t)
+   (calc . t)
+   (haskell . t)
+   (sh . t)
+   (js . t)
+   (ditaa . t)
+   (org . t)
+   (lilypond . t)
+   (java . t)
+   )
+ )
+
+(autoload 'run-octave "octave-inf" nil t)
+;;(autoload 'octave-mode "octave-mod" nil t)
+
+;; ;;; Commentary
+;; ;; Originally from here https://github.com/suvayu/.emacs.d/blob/master/org-mode-config.el#L140
+
+;; ;;; Code
+(require 'ox)
+(require 'ox-latex)
+;;
+;;(require 'ox-bibtex)
+(require 'ox-beamer)
+(require 'org-bibtex)
+
+;;; XeLaTeX customisations
+;; remove "inputenc" from default packages as it clashes with xelatex
+(setf org-latex-default-packages-alist
+            (remove '("AUTO" "inputenc" t) org-latex-default-packages-alist))
+;; the sexp below will also work in this case. But it is not robust as it
+;; pops the first element regardless if its a match or not.
+;; (pop org-latex-default-packages-alist)
+(add-to-list 'org-latex-packages-alist '("" "xltxtra" t))
+;; choose Linux Libertine O as serif and Linux Biolinum O as sans-serif fonts
+(add-to-list 'org-latex-packages-alist '("" "libertine" t))
+;; commented for now as preferable to set per file for now
+;; (add-to-list 'org-latex-packages-alist '("" "unicode-math" t))
+;; (add-to-list 'org-latex-packages-alist
+;; "\\setmathfont{Linux Libertine}" t) ; needed for unicode-math
+;; org to latex customisations, -shell-escape needed for minted
+(setq org-export-dispatch-use-expert-ui t ; non-intrusive export dispatch
+            org-latex-pdf-process ; for regular export
+            '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+;; export single chapter
+(add-to-list 'org-latex-classes
+                         '("chapter" "\\documentclass[11pt]{report}"
+                             ("\\chapter{%s}" . "\\chapter*{%s}")
+                             ("\\section{%s}" . "\\section*{%s}")
+                             ("\\subsection{%s}" . "\\subsection*{%s}")
+                             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+
+;; ;; ADD-TO-LIST CMMR PROCEEDINGS
+;; (add-to-list 'org-latex-classes
+;;  `("llncs" "\\documentclass{llncs}
+;;                [NO-DEFAULT-PACKAGES]
+;;                [PACKAGES]
+;;                [EXTRA]"
+;;                  ("\\section{%s}" . "\\section*{%s}")
+;;                  ("\\subsection{%s}" "\\newpage" "\\subsection*{%s}" "\\newpage")
+;;                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+;;                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
+;;                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+;;                )
+;; ;;CMMR ENDS HERE
+
+;; ;; FIXME: doesn't work because of \hypersetup, \tableofcontents, etc.
+;; ;; minimal export with the new exporter (maybe use the standalone class?)
+;; (add-to-list 'org-latex-classes
+;; '("minimal"
+;; "\\documentclass\{minimal\}\n[NO-DEFAULT-PACKAGES]\n[NO-PACKAGES]"
+;; ("\\section\{%s\}" . "\\section*\{%s\}")
+;; ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
+;; ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
+;; beamer export with the new exporter
+(add-to-list 'org-beamer-environments-extra
+                         '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}"))
+(add-to-list 'org-beamer-environments-extra
+                         '("boldH" "h" "\\textbf{%h}" "%%%%"))
+(add-to-list 'org-beamer-environments-extra
+                         '("phantom" "P" "\\phantom{%h}" ""))
+(add-to-list 'org-export-snippet-translation-alist
+                         '("b" . "beamer"))
+(add-to-list 'org-export-snippet-translation-alist
+                         '("l" . "latex"))
+(add-to-list 'org-export-snippet-translation-alist
+                         '("h" . "html"))
+(add-to-list 'org-export-snippet-translation-alist
+                         '("o" . "odt"))
+;; filters for markups
+(defun sa-beamer-bold (contents backend info)
+    (when (org-export-derived-backend-p backend 'beamer)
+        (replace-regexp-in-string "\\`\\\\[A-Za-z0-9]+" "\\\\textbf" contents)))
+(add-to-list 'org-export-filter-bold-functions 'sa-beamer-bold)
+(defun sa-beamer-structure (contents backend info)
+    (when (org-export-derived-backend-p backend 'beamer)
+        (replace-regexp-in-string "\\`\\\\[A-Za-z0-9]+" "\\\\structure" contents)))
+(add-to-list 'org-export-filter-strike-through-functions 'sa-beamer-structure)
+;; FIXME: using $_{\text{string}}$ looks much better!
+;; (defun sa-latex-subscript (contents backend info)
+;; (when (org-export-derived-backend-p backend 'beamer 'latex)
+;; (replace-regexp-in-string "\\$_{\\\\text{\\([^}]+\\)}}\\$"
+;; "\\\\textsubscript{\\1}" contents)))
+;; (add-to-list 'org-export-filter-subscript-functions 'sa-latex-subscript)
+;; (defun sa-latex-superscript (contents backend info)
+;; (when (org-export-derived-backend-p backend 'beamer 'latex)
+;; (replace-regexp-in-string "\\$\\^{\\\\text{\\([^}]+\\)}}\\$"
+;; "\\\\textsuperscript{\\1}" contents)))
+;; (add-to-list 'org-export-filter-superscript-functions 'sa-latex-superscript)
+;; FIXME: implement configurable reference style for latex export
+;; (defun sa-latex-reflink (contents backend info)
+;; (when (and (eq (plist-get info :refstyle) t)
+;; (org-export-derived-backend-p backend 'latex))
+;; (replace-regexp-in-string "\\`\\\\\\(ref\\){\\([a-zA-Z0-9]+\\):\\([a-zA-Z0-9]+\\)}"
+;; "\\\\\\2\\1{\\2:\\3}" contents)))
+;; (add-to-list 'org-export-filter-link-functions 'sa-latex-reflink)
+;;; not needed any more, here for example purposes
+;; ;; smart quotes on only for latex backend (courtesy: Jambunathan)
+;; (defun sa-org-latex-options-function (info backend)
+;; (when (eq backend 'latex)
+;; (plist-put info :with-smart-quotes t)))
+;; (add-to-list 'org-export-filter-options-functions 'sa-org-latex-options-function)
+(defun sa-ignore-headline (contents backend info)
+    "Ignore headlines with tag `ignoreheading'."
+    (when (and (org-export-derived-backend-p backend 'latex 'html 'ascii)
+                         (string-match "\\`.*ignoreheading.*\n"
+                                                     (downcase contents)))
+        (replace-match "" nil nil contents)))
+(add-to-list 'org-export-filter-headline-functions 'sa-ignore-headline)
+;; EOF XELATEX <<<<<<<<<<<<<<<<<<<<<<<<
+
+;; Sauron -
+(add-to-list 'load-path "~/sources/sauron")
+(require 'sauron)
+;; kbd shortcut for sauron window
+(global-set-key (kbd "C-c h s") 'sauron-toggle-hide-show)
+;; sticky framework
+(setq sauron-sticky-frame t)
+
+;;; package --- Summary
+;; http://emacs-fu.blogspot.gr/2009/11/showing-pop-ups.html
+;; This is an approach to show notifications from emacs and orgmode agenda
+
+;;; Commentary
+;; (date-to-time "2015-06-22 00:15 GTM")
+
+;; (sauron-add-event
+;;  'tv
+;;  5
+;;  "Des ERT!"
+;;  '(lambda ()
+;;     (message "Oi lexeis ftaine !!"))
+;;  '(date-to-time "2015-06-22 00:25 GTM"))
+
+;; https://github.com/djcb/sauron#readme
+
+;; ======================================
+
+;;; Code:
+
+(defun djcb-popup (title msg &optional icon sound)
+  "Show a popup if we're on X, or echo it otherwise; TITLE is the title
+of the message, MSG is the context. Optionally, you can provide an ICON and
+a sound to be played"
+
+  (interactive)
+  (when sound (shell-command
+               (concat "mplayer -really-quiet " sound " 2> /dev/null")))
+  (if (eq window-system 'x)
+      (shell-command (concat "notify-send "
+
+                             (if icon (concat "-i " icon) "")
+                             " '" title "' '" msg "'"))
+    ;; text only version
+
+    (message (concat title ": " msg))))
+
+;; This is a demo -- Run this is *scratch*
+;; (djcb-popup "Warning" "The end is near"
+;;             "/usr/share/icons/xcircuit.png" "/usr/share/sounds/gnome/default/alerts/sonar.ogg")
+
+;;
+;; the appointment notification facility
+(setq
+ appt-message-warning-time 10 ;; warn 15 min in advance
+ appt-display-mode-line t     ;; show in the modeline
+ appt-display-format 'window) ;; use our func
+(appt-activate 1)              ;; active appt (appointment notification)
+(display-time)                 ;; time display is required for this...
+
+;; update appt each time agenda opened
+
+(add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
+
+;; our little façade-function for djcb-popup
+(defun djcb-appt-display (min-to-app new-time msg)
+  (djcb-popup (format "Appointment in %s minute(s)" min-to-app) msg
+              "/usr/share/icons/gnome/32x32/status/appointment-soon.png" "/usr/share/sounds/gnome/default/alerts/glass.ogg"))
+(setq appt-disp-window-function (function djcb-appt-display))
+
+;;; Commentary
+;; https://github.com/punchagan/blog-files
+
+;;; Code:
+;; ====================
+;; ORG-PUBLISHING
+;; ====================
+;; multiple publishing projects
+;; http://lists.gnu.org/archive/html/emacs-orgmode/2009-10/msg00143.html
+(require 'ox-publish)
+;; http://stackoverflow.com/questions/9742836/how-do-i-format-the-postamble-in-html-export-with-org-mode
+(setq org-html-postamble-format
+      '(("en" "<p class=\"postamble\">Last Updated %d, <br>by %a. <br>Created by %c"</p>)))
+(setq org-publish-project-alist
+      '(
+        ("org-notes"               ;Used to export .org file
+         :base-directory "~/blog/"  ;directory holds .org files
+         :base-extension "org"     ;process .org file only
+         :publishing-directory "/ssh:gediapou@halava.cc.jyu.fi:/nashome3/gediapou/html/blog/";;"~/public_html/"    ;export destination
+                                        ;:publishing-directory "/ssh:aucotsi@larigot.avarts.ionio.gr:" ;export to server
+         :recursive t
+         :publishing-function org-html-publish-to-html
+         :headline-levels 4               ; Just the default for this project.
+         :auto-preamble t
+         :auto-sitemap t                  ; Generate sitemap.org automagically...
+         :sitemap-filename "sitemap.org"  ; ... call it sitemap.org (it's the default)...
+         :sitemap-title "Sitemap"         ; ... with title 'Sitemap'.
+         :export-creator-info t    ; Disable the inclusion of "Created by Org" in the postamble.
+         :export-author-info t     ; Disable the inclusion of "Author: Your Name" in the postamble.
+         :auto-postamble t         ; Disable auto postamble
+         :table-of-contents t        ; Set this to "t" if you want a table of contents, set to "nil" disables TOC.
+         :section-numbers nil        ; Set this to "t" if you want headings to have numbers.
+         :html-postamble t;"<p class=\"postamble\">Last Updated %d.</p> " ; your personal postamble
+         :style-include-default nil  ;Disable the default css style
+         :archived-trees t
+         )
+        ("org-static"                ;Used to publish static files
+         :base-directory "~/blog/"
+         :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
+         :publishing-directory "/ssh:gediapou@halava.cc.jyu.fi:/nashome3/gediapou/html/blog/";;"~/public_html/"
+         :recursive t
+         :publishing-function org-publish-attachment
+         )
+        ("org" :components ("org-notes" "org-static")) ;combine "org-static" and "org-static" into one function call
+
+        ;; BLOGGING
+        ("blog"
+         :components ("blog-content" "blog-static"))
+        ("blog-content"
+         :base-directory "~/src/blogposts/"
+         :base-extension "org"
+         :publishing-directory "/ssh:gediapou@halava.cc.jyu.fi:/nashome3/gediapou/html/blog/"
+         :recursive t
+         :publishing-function org-html-publish-to-html
+         :export-with-tags nil
+         :headline-levels 4             ; Just the default for this project.
+         :table-of-contents nil
+         :section-numbers nil
+         :sub-superscript nil
+         :todo-keywords nil
+         :author nil
+         :creator-info nil
+         :html-preamble "Georgios Diapoulis blog"
+         :html-postamble nil
+         :style "This is raw html for stylesheet <link>'s"
+         :timestamp t
+         :exclude-tags ("noexport" "todo")
+         :auto-preamble t)
+        ("blog-static"
+         :base-directory "~/src/blogposts/static/"
+         :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|otf"
+         :publishing-directory "/ssh:gediapou@halava.cc.jyu.fi:/nashome3/gediapou/html/blog/static/"
+         :recursive t
+         :publishing-function org-publish-attachment)
+        )
+      )
+
+;; Org Publish to Stat Blog to Jekyll config Added 26 Mar 2015
+;; http://orgmode.org/worg/org-tutorials/org-jekyll.html
+;; Thanks to Ian Barton
+(require 'org)
+(require 'org2jekyll)
+
+(setq org-publish-project-alist
+      '(
+        ("org-aucotsi"
+         ;; Path to your org files.
+         :base-directory "~/myblog/"
+         :base-extension "org"
+
+         ;; Path to your Jekyll project.
+         :publishing-directory "~/myblog/jekyll/_posts/"
+         :recursive t
+         :publishing-function org-html-publish-to-html ;;org-publish-org-to-html
+         :headline-levels 4
+         :html-extension "html"
+         :body-only t ;; Only export section between <body> </body>
+         )
+
+        ("org-static-aucotsi"
+         :base-directory "~/myblog/"
+         :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|php"
+         :publishing-directory "~/myblog/jekyll/_posts/"
+         :recursive t
+         :publishing-function org-publish-attachment)
+
+        ("aucotsi" :components ("org-aucotsi" "org-static-aucotsi"))
+
+        ))
