@@ -9,6 +9,9 @@
 (add-to-list 'load-path "~/sources/org2jekyll-0.0.7/")
 (add-to-list 'load-path "~/sources/org-js/")
 
+;; (add-to-list 'load-path "~/PKGBUILDS/emacs-helm/src/helm-1.9.9/")
+;; (require 'helm-config)
+;; (helm-mode 1)
 #+END_SRC
 
 * Themes
@@ -77,6 +80,13 @@
 (define-key input-decode-map "\e;2M" [C-return])
 #+END_SRC
 
+* IRC
+
+#+BEGIN_SRC emacs-lisp
+(setq rcirc-server-alist
+      '(("irc.freenode.net" :channels ("#hsgr-cc" "#python" "#python-unregistered" "#bash" "#emacs"))))
+
+#+END_SRC
 * SClang
 ** Emacs config
 #+BEGIN_SRC emacs-lisp

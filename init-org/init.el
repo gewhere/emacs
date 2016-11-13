@@ -5,6 +5,10 @@
 (add-to-list 'load-path "~/sources/org2jekyll-0.0.7/")
 (add-to-list 'load-path "~/sources/org-js/")
 
+;; (add-to-list 'load-path "~/PKGBUILDS/emacs-helm/src/helm-1.9.9/")
+;; (require 'helm-config)
+;; (helm-mode 1)
+
 ;; THEMES
 (setq prelude-theme 'nil)
 
@@ -56,6 +60,9 @@
 ;; shift-<return>
 (define-key input-decode-map "\e;2M" [C-return])
 
+(setq rcirc-server-alist
+      '(("irc.freenode.net" :channels ("#hsgr-cc" "#python" "#python-unregistered" "#bash" "#emacs"))))
+
 ;; SCLANG
 (require 'sclang)
 ;;-- skeleton pair insertion for brackets and stuff
@@ -68,6 +75,35 @@
 (global-set-key "\<" 'skeleton-pair-insert-maybe)
 (setq skeleton-pair 1)
 ;; end for sc-lang
+
+(require 'org)
+(require 'ob)
+
+(require 'sclang-interp)
+
+(defgroup ob-sclang nil
+  "org-mode blocks for SuperCollider SCLang."
+  :group 'org)
+
+(defun org-babel-execute:sclang (body params)
+  "Org-mode Babel sclang hook for evaluate `BODY' with `PARAMS'."
+  (unless (or (equal (buffer-name) sclang-post-buffer)
+              (sclang-get-process))
+    (sclang-start))
+
+  (sclang-eval-string body t))
+
+(defvar org-babel-default-header-args:sclang nil)
+
+(setq org-babel-default-header-args:sclang
+      '((:session . "*SCLang:Workspace*")
+        (:output . "none")) ; TODO: temporary can't find way to let sclang output to stdout for org-babel.
+      )
+
+(with-eval-after-load "org"
+  (add-to-list 'org-src-lang-modes '("sclang" . sclang)))
+
+(provide 'ob-sclang)
 
 (setq inferior-lisp-program "clisp -K base")
 
@@ -491,32 +527,3 @@ a sound to be played"
         ("aucotsi" :components ("org-aucotsi" "org-static-aucotsi"))
 
         ))
-
-(require 'org)
-(require 'ob)
-
-(require 'sclang-interp)
-
-(defgroup ob-sclang nil
-  "org-mode blocks for SuperCollider SCLang."
-  :group 'org)
-
-(defun org-babel-execute:sclang (body params)
-  "Org-mode Babel sclang hook for evaluate `BODY' with `PARAMS'."
-  (unless (or (equal (buffer-name) sclang-post-buffer)
-              (sclang-get-process))
-    (sclang-start))
-
-  (sclang-eval-string body t))
-
-(defvar org-babel-default-header-args:sclang nil)
-
-(setq org-babel-default-header-args:sclang
-      '((:session . "*SCLang:Workspace*")
-        (:output . "output")) ; TODO: temporary can't find way to let sclang output to stdout for org-babel.
-      )
-
-(with-eval-after-load "org"
-  (add-to-list 'org-src-lang-modes '("sclang" . sclang)))
-
-(provide 'ob-sclang)
