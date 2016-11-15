@@ -30,6 +30,8 @@
 
 (global-set-key (kbd "C-c h w") 'whitespace-mode)
 (global-set-key (kbd "C-c h l") 'visual-line-mode)
+(global-set-key (kbd "C-c C-i l") 'octave-send-line)
+(global-set-key (kbd "C-c C-i b") 'octave-send-block)
 
 (setq org-src-fontify-natively t)
 
@@ -60,8 +62,17 @@
 ;; shift-<return>
 (define-key input-decode-map "\e;2M" [C-return])
 
+(add-to-list 'load-path "~/sources/wc-mode")
+(add-hook 'org-mode-hook 'wc-mode)
+(require 'wc-mode)
+;; Suggested setting
+(global-set-key "\C-cw" 'wc-mode)
+
 (setq rcirc-server-alist
-      '(("irc.freenode.net" :channels ("#hsgr-cc" "#python" "#python-unregistered" "#bash" "#emacs"))))
+      '(("irc.freenode.net" :port 6697 :encryption tls
+         :channels ("#rcirc" "#hsgr-cc" "#python" "#bash" "#emacs" "#emacs-beginners" "#archlinux" "#rirc" "#org-mode" "##learnpython" "#archlinux-greece" "#tmux" "xterm"))))
+;(setq rcirc-server-alist
+;      '(("irc.freenode.net" :channels ("#hsgr-cc" "#python" "#bash" "#emacs" "#emacs-beginners" "#archlinux" "#rirc" "#org-mode" "##learnpython" "#archlinux-greece" "#archlinux-newbie"))))
 
 ;; SCLANG
 (require 'sclang)

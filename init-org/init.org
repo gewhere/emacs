@@ -42,6 +42,8 @@
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c h w") 'whitespace-mode)
 (global-set-key (kbd "C-c h l") 'visual-line-mode)
+(global-set-key (kbd "C-c C-i l") 'octave-send-line)
+(global-set-key (kbd "C-c C-i b") 'octave-send-block)
 #+END_SRC
 
 * Variables
@@ -80,12 +82,22 @@
 (define-key input-decode-map "\e;2M" [C-return])
 #+END_SRC
 
+* Modes
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "~/sources/wc-mode")
+(add-hook 'org-mode-hook 'wc-mode)
+(require 'wc-mode)
+;; Suggested setting
+(global-set-key "\C-cw" 'wc-mode)
+#+END_SRC
 * IRC
 
 #+BEGIN_SRC emacs-lisp
 (setq rcirc-server-alist
-      '(("irc.freenode.net" :channels ("#hsgr-cc" "#python" "#python-unregistered" "#bash" "#emacs"))))
-
+      '(("irc.freenode.net" :port 6697 :encryption tls
+	 :channels ("#rcirc" "#hsgr-cc" "#python" "#bash" "#emacs" "#emacs-beginners" "#archlinux" "#rirc" "#org-mode" "##learnpython" "#archlinux-greece" "#tmux" "xterm"))))
+;(setq rcirc-server-alist
+;      '(("irc.freenode.net" :channels ("#hsgr-cc" "#python" "#bash" "#emacs" "#emacs-beginners" "#archlinux" "#rirc" "#org-mode" "##learnpython" "#archlinux-greece" "#archlinux-newbie"))))
 #+END_SRC
 * SClang
 ** Emacs config
@@ -274,6 +286,7 @@ href=\"http://sachachua.com/blog/wp-content/themes/sacha-v3/foundation/css/found
 (autoload 'run-octave "octave-inf" nil t)
 ;;(autoload 'octave-mode "octave-mod" nil t)
 #+END_SRC
+
 
 * Xelatex
 #+BEGIN_SRC emacs-lisp
