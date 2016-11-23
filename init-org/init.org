@@ -8,12 +8,9 @@
 ;; load orgmode
 (add-to-list 'load-path "~/sources/org2jekyll-0.0.7/")
 (add-to-list 'load-path "~/sources/org-js/")
-
-;; (add-to-list 'load-path "~/PKGBUILDS/emacs-helm/src/helm-1.9.9/")
-;; (require 'helm-config)
-;; (helm-mode 1)
+(add-to-list 'load-path "~/PKGBUILDS/emacs-helm/src/helm-1.9.9/")
+(add-to-list 'load-path "~/sources/helm-projectile/")
 #+END_SRC
-
 * Themes
 
 #+BEGIN_SRC emacs-lisp
@@ -95,9 +92,10 @@
 #+BEGIN_SRC emacs-lisp
 (setq rcirc-server-alist
       '(("irc.freenode.net" :port 6697 :encryption tls
-	 :channels ("#rcirc" "#hsgr-cc" "#python" "#bash" "#emacs" "#emacs-beginners" "#archlinux" "#rirc" "#org-mode" "##learnpython" "#archlinux-greece" "#tmux" "xterm"))))
-;(setq rcirc-server-alist
-;      '(("irc.freenode.net" :channels ("#hsgr-cc" "#python" "#bash" "#emacs" "#emacs-beginners" "#archlinux" "#rirc" "#org-mode" "##learnpython" "#archlinux-greece" "#archlinux-newbie"))))
+	 :channels ("#hsgr-cc"))))
+;; "#python" "#bash" "#emacs" "#emacs-beginners" "#archlinux" "#org-mode" "##learnpython" "#archlinux-greece" "#tmux" "#xterm" "#systemd" "#git" "#haskell-beginners" "#regex" "##machinelearning" "#archlinux-offtopic" "##philosophy" "##statistics" "#musicbrainz" "#esoteric" "#music-theory" "##logic" "#ai" "##music" "#archlinux-aur" "##cs" "##matlab" "#octave" "#archlinux-pacman" "#supercollider"))))
+;;(setq rcirc-server-alist
+;;      '(("irc.freenode.net" :channels ("#hsgr-cc" "#python" "#bash" "#emacs" "#emacs-beginners" "#archlinux" "#rirc" "#org-mode" "##learnpython" "#archlinux-greece" "#archlinux-newbie"))))
 #+END_SRC
 * SClang
 ** Emacs config
@@ -257,12 +255,24 @@ href=\"http://sachachua.com/blog/wp-content/themes/sacha-v3/foundation/css/found
 (load "ess-site")
 
 ;; Set python2 for python
-(setq org-babel-python-command "python2")
+;;(setq org-babel-python-command "python2")
+
+;; set indentation
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+;; and secure for babel source codes
+(setq org-src-tab-acts-natively t)
+(setq org-src-preserve-indentation t)
 
 ;; colorized src blocks
 ;; (setq org-src-fontify-natively t)
 ;; (setq org-html-htmlize-output-type 'css)
 ;; (setq org-src-window-setup 'current-window-configuration)
+
+;; python TAB offset
+;;(add-hook 'python-mode-hook 'guess-style-guess-tabs-mode)
+;;(add-hook 'python-mode-hook (lambda ()
+;;                              (guess-style-guess-tab-width)))
 
 ;; Load Babel languages
 (org-babel-do-load-languages
@@ -287,7 +297,6 @@ href=\"http://sachachua.com/blog/wp-content/themes/sacha-v3/foundation/css/found
 ;;(autoload 'octave-mode "octave-mod" nil t)
 #+END_SRC
 
-
 * Xelatex
 #+BEGIN_SRC emacs-lisp
 ;; ;;; Commentary
@@ -299,7 +308,6 @@ href=\"http://sachachua.com/blog/wp-content/themes/sacha-v3/foundation/css/found
 ;;
 ;;(require 'ox-bibtex)
 (require 'ox-beamer)
-(require 'org-bibtex)
 
 ;;; XeLaTeX customisations
 ;; remove "inputenc" from default packages as it clashes with xelatex
@@ -408,7 +416,6 @@ href=\"http://sachachua.com/blog/wp-content/themes/sacha-v3/foundation/css/found
 (add-to-list 'org-export-filter-headline-functions 'sa-ignore-headline)
 ;; EOF XELATEX <<<<<<<<<<<<<<<<<<<<<<<<
 #+END_SRC
-
 
 * Notifications
 ** Sauron
@@ -567,7 +574,6 @@ a sound to be played"
       )
 #+END_SRC
 
-
 * Org-jekyll
 
 
@@ -604,4 +610,21 @@ a sound to be played"
         ("aucotsi" :components ("org-aucotsi" "org-static-aucotsi"))
 
         ))
+#+END_SRC
+
+* org-bibtex
+#+BEGIN_SRC emacs-lisp
+;; (add-to-list 'load-path
+;;              (expand-file-name "~/sources/org-mode/contrib/lisp"
+;;                               (file-name-directory
+;;                                org-find-library-dir "org")))
+
+(add-to-list 'load-path "~/personal/annotated-bibliography/org-bibtex/")
+
+;; manage citations
+(require 'org-bibtex)
+
+;; export citations
+(require 'ox-bibtex)
+(setq org-bibtex-file "papers.org")
 #+END_SRC

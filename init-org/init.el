@@ -4,10 +4,68 @@
 ;; load orgmode
 (add-to-list 'load-path "~/sources/org2jekyll-0.0.7/")
 (add-to-list 'load-path "~/sources/org-js/")
+(add-to-list 'load-path "~/PKGBUILDS/emacs-helm/src/helm-1.9.9/")
+(add-to-list 'load-path "~/sources/helm-projectile/")
 
-;; (add-to-list 'load-path "~/PKGBUILDS/emacs-helm/src/helm-1.9.9/")
+;; ;; https://tuhdo.github.io/helm-intro.html
+;; (require 'helm)
 ;; (require 'helm-config)
+;;
+;; ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+;; ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
+;; ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
+;; (global-set-key (kbd "C-c h") 'helm-command-prefix)
+;; (global-unset-key (kbd "C-x c"))
+;;
+;; (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+;; (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
+;; (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+;;
+;; (when (executable-find "curl")
+;;   (setq helm-google-suggest-use-curl-p t))
+;;
+;; (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
+;;       helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+;;       helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+;;       helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+;;       helm-ff-file-name-history-use-recentf t
+;;       helm-echo-input-in-header-line t)
+;;
+;; (defun spacemacs//helm-hide-minibuffer-maybe ()
+;;   "Hide minibuffer in Helm session if we use the header line as input field."
+;;   (when (with-helm-buffer helm-echo-input-in-header-line)
+;;     (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
+;;       (overlay-put ov 'window (selected-window))
+;;       (overlay-put ov 'face
+;;                    (let ((bg-color (face-background 'default nil)))
+;;                      `(:background ,bg-color :foreground ,bg-color)))
+;;       (setq-local cursor-type nil))))
+;;
+;;
+;; (add-hook 'helm-minibuffer-set-up-hook
+;;           'spacemacs//helm-hide-minibuffer-maybe)
+;;
+;; (setq helm-autoresize-max-height 0)
+;; (setq helm-autoresize-min-height 20)
+;; (helm-autoresize-mode 1)
+;;
 ;; (helm-mode 1)
+
+;; (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to do persistent action
+;; (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+;; (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+;; (global-set-key (kbd "M-x") 'helm-M-x)
+;; (setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
+;; (global-set-key (kbd "C-x b") 'helm-mini)
+;; (setq helm-buffers-fuzzy-matching t
+;;       helm-recentf-fuzzy-match    t)
+;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
+;; (setq helm-locate-fuzzy-match t)
+;; (setq helm-lisp-fuzzy-completion t)
+
+;; (setq helm-projectile-fuzzy-match nil)
+;; (require 'helm-projectile)
+;; (helm-projectile-on)
 
 ;; THEMES
 (setq prelude-theme 'nil)
@@ -70,9 +128,10 @@
 
 (setq rcirc-server-alist
       '(("irc.freenode.net" :port 6697 :encryption tls
-         :channels ("#rcirc" "#hsgr-cc" "#python" "#bash" "#emacs" "#emacs-beginners" "#archlinux" "#rirc" "#org-mode" "##learnpython" "#archlinux-greece" "#tmux" "xterm"))))
-;(setq rcirc-server-alist
-;      '(("irc.freenode.net" :channels ("#hsgr-cc" "#python" "#bash" "#emacs" "#emacs-beginners" "#archlinux" "#rirc" "#org-mode" "##learnpython" "#archlinux-greece" "#archlinux-newbie"))))
+         :channels ("#hsgr-cc"))))
+;; "#python" "#bash" "#emacs" "#emacs-beginners" "#archlinux" "#org-mode" "##learnpython" "#archlinux-greece" "#tmux" "#xterm" "#systemd" "#git" "#haskell-beginners" "#regex" "##machinelearning" "#archlinux-offtopic" "##philosophy" "##statistics" "#musicbrainz" "#esoteric" "#music-theory" "##logic" "#ai" "##music" "#archlinux-aur" "##cs" "##matlab" "#octave" "#archlinux-pacman" "#supercollider"))))
+;;(setq rcirc-server-alist
+;;      '(("irc.freenode.net" :channels ("#hsgr-cc" "#python" "#bash" "#emacs" "#emacs-beginners" "#archlinux" "#rirc" "#org-mode" "##learnpython" "#archlinux-greece" "#archlinux-newbie"))))
 
 ;; SCLANG
 (require 'sclang)
@@ -213,12 +272,24 @@ href=\"http://sachachua.com/blog/wp-content/themes/sacha-v3/foundation/css/found
 (load "ess-site")
 
 ;; Set python2 for python
-(setq org-babel-python-command "python2")
+;;(setq org-babel-python-command "python2")
+
+;; set indentation
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+;; and secure for babel source codes
+(setq org-src-tab-acts-natively t)
+(setq org-src-preserve-indentation t)
 
 ;; colorized src blocks
 ;; (setq org-src-fontify-natively t)
 ;; (setq org-html-htmlize-output-type 'css)
 ;; (setq org-src-window-setup 'current-window-configuration)
+
+;; python TAB offset
+;;(add-hook 'python-mode-hook 'guess-style-guess-tabs-mode)
+;;(add-hook 'python-mode-hook (lambda ()
+;;                              (guess-style-guess-tab-width)))
 
 ;; Load Babel languages
 (org-babel-do-load-languages
@@ -251,7 +322,6 @@ href=\"http://sachachua.com/blog/wp-content/themes/sacha-v3/foundation/css/found
 ;;
 ;;(require 'ox-bibtex)
 (require 'ox-beamer)
-(require 'org-bibtex)
 
 ;;; XeLaTeX customisations
 ;; remove "inputenc" from default packages as it clashes with xelatex
@@ -538,3 +608,17 @@ a sound to be played"
         ("aucotsi" :components ("org-aucotsi" "org-static-aucotsi"))
 
         ))
+
+;; (add-to-list 'load-path
+;;              (expand-file-name "~/sources/org-mode/contrib/lisp"
+;;                               (file-name-directory
+;;                                org-find-library-dir "org")))
+
+(add-to-list 'load-path "~/personal/annotated-bibliography/org-bibtex/")
+
+;; manage citations
+(require 'org-bibtex)
+
+;; export citations
+(require 'ox-bibtex)
+(setq org-bibtex-file "papers.org")
