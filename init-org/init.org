@@ -21,12 +21,11 @@
 (add-to-list 'custom-theme-load-path "~/sources/color-theme-tangotango")
 (load-theme 'tangotango t)
 
-
 ;; powerline
 (add-to-list 'load-path "~/sources/emacs-powerline")
 (require 'powerline)
 
-;; moe theme for powerline
+;; moe theme
 (add-to-list 'custom-theme-load-path "~/sources/moe-theme.el/")
 (add-to-list 'load-path "~/sources/moe-theme.el/")
 (require 'moe-theme)
@@ -92,7 +91,7 @@
 #+BEGIN_SRC emacs-lisp
 (setq rcirc-server-alist
       '(("irc.freenode.net" :port 6697 :encryption tls
-	 :channels ("#hsgr-cc"))))
+	 :channels ("#hsgr-cc" "#bash" "#supercollider" "##machinelearning"))))
 ;; "#python" "#bash" "#emacs" "#emacs-beginners" "#archlinux" "#org-mode" "##learnpython" "#archlinux-greece" "#tmux" "#xterm" "#systemd" "#git" "#haskell-beginners" "#regex" "##machinelearning" "#archlinux-offtopic" "##philosophy" "##statistics" "#musicbrainz" "#esoteric" "#music-theory" "##logic" "#ai" "##music" "#archlinux-aur" "##cs" "##matlab" "#octave" "#archlinux-pacman" "#supercollider"))))
 ;;(setq rcirc-server-alist
 ;;      '(("irc.freenode.net" :channels ("#hsgr-cc" "#python" "#bash" "#emacs" "#emacs-beginners" "#archlinux" "#rirc" "#org-mode" "##learnpython" "#archlinux-greece" "#archlinux-newbie"))))
@@ -291,7 +290,7 @@ href=\"http://sachachua.com/blog/wp-content/themes/sacha-v3/foundation/css/found
    (lilypond . t)
    (java . t)
    )
- )
+)
 
 (autoload 'run-octave "octave-inf" nil t)
 ;;(autoload 'octave-mode "octave-mod" nil t)
