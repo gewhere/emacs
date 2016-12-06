@@ -15,6 +15,10 @@
 
 #+BEGIN_SRC emacs-lisp
 ;; THEMES
+;; disable highlight line under cursor
+(global-hl-line-mode 0)
+
+;; disable prelude theme
 (setq prelude-theme 'nil)
 
 ;; tangotango
@@ -80,6 +84,7 @@
 
 * Modes
 #+BEGIN_SRC emacs-lisp
+(require 'org-install)
 (add-to-list 'load-path "~/sources/wc-mode")
 (add-hook 'org-mode-hook 'wc-mode)
 (require 'wc-mode)
@@ -283,7 +288,7 @@ href=\"http://sachachua.com/blog/wp-content/themes/sacha-v3/foundation/css/found
    (R . t)
    (calc . t)
    (haskell . t)
-   (sh . t)
+   (shell . t)
    (js . t)
    (ditaa . t)
    (org . t)
@@ -414,6 +419,7 @@ href=\"http://sachachua.com/blog/wp-content/themes/sacha-v3/foundation/css/found
         (replace-match "" nil nil contents)))
 (add-to-list 'org-export-filter-headline-functions 'sa-ignore-headline)
 ;; EOF XELATEX <<<<<<<<<<<<<<<<<<<<<<<<
+
 #+END_SRC
 
 * Notifications
@@ -626,4 +632,11 @@ a sound to be played"
 ;; export citations
 (require 'ox-bibtex)
 (setq org-bibtex-file "papers.org")
+#+END_SRC
+* org odt export
+#+BEGIN_SRC emacs-lisp
+;;For odt export, define a variable org-odt-data-dir to point
+;;to an existing directory, e.g.
+;;(defvar org-odt-data-dir "~/.emacs.d/org/etc")
+(defvar org-odt-data-dir "~/personal/odt")
 #+END_SRC

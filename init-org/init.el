@@ -1,4 +1,3 @@
-
 (setq user-full-name "Georgios Diapoulis")
 
 ;; load orgmode
@@ -8,6 +7,10 @@
 (add-to-list 'load-path "~/sources/helm-projectile/")
 
 ;; THEMES
+;; disable highlight line under cursor
+(global-hl-line-mode 0)
+
+;; disable prelude theme
 (setq prelude-theme 'nil)
 
 ;; tangotango
@@ -59,6 +62,7 @@
 ;; shift-<return>
 (define-key input-decode-map "\e;2M" [C-return])
 
+(require 'org-install)
 (add-to-list 'load-path "~/sources/wc-mode")
 (add-hook 'org-mode-hook 'wc-mode)
 (require 'wc-mode)
@@ -67,7 +71,7 @@
 
 (setq rcirc-server-alist
       '(("irc.freenode.net" :port 6697 :encryption tls
-         :channels ("#hsgr-cc" "#bash" "#supercollider" "##machinelearning"))))
+	 :channels ("#hsgr-cc" "#bash" "#supercollider" "##machinelearning"))))
 ;; "#python" "#bash" "#emacs" "#emacs-beginners" "#archlinux" "#org-mode" "##learnpython" "#archlinux-greece" "#tmux" "#xterm" "#systemd" "#git" "#haskell-beginners" "#regex" "##machinelearning" "#archlinux-offtopic" "##philosophy" "##statistics" "#musicbrainz" "#esoteric" "#music-theory" "##logic" "#ai" "##music" "#archlinux-aur" "##cs" "##matlab" "#octave" "#archlinux-pacman" "#supercollider"))))
 ;;(setq rcirc-server-alist
 ;;      '(("irc.freenode.net" :channels ("#hsgr-cc" "#python" "#bash" "#emacs" "#emacs-beginners" "#archlinux" "#rirc" "#org-mode" "##learnpython" "#archlinux-greece" "#archlinux-newbie"))))
@@ -240,7 +244,7 @@ href=\"http://sachachua.com/blog/wp-content/themes/sacha-v3/foundation/css/found
    (R . t)
    (calc . t)
    (haskell . t)
-   (sh . t)
+   (shell . t)
    (js . t)
    (ditaa . t)
    (org . t)
@@ -561,3 +565,8 @@ a sound to be played"
 ;; export citations
 (require 'ox-bibtex)
 (setq org-bibtex-file "papers.org")
+
+;;For odt export, define a variable org-odt-data-dir to point
+;;to an existing directory, e.g.
+;;(defvar org-odt-data-dir "~/.emacs.d/org/etc")
+(defvar org-odt-data-dir "~/personal/odt")
