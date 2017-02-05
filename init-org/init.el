@@ -1,10 +1,11 @@
+
 (setq user-full-name "Georgios Diapoulis")
 
 ;; load orgmode
 (add-to-list 'load-path "~/sources/org2jekyll-0.0.7/")
 (add-to-list 'load-path "~/sources/org-js/")
-(add-to-list 'load-path "~/PKGBUILDS/emacs-helm/src/helm-1.9.9/")
-(add-to-list 'load-path "~/sources/helm-projectile/")
+;;(add-to-list 'load-path "~/PKGBUILDS/emacs-helm/src/helm-1.9.9/")
+;;(add-to-list 'load-path "~/sources/helm-projectile/")
 
 ;; THEMES
 ;; disable highlight line under cursor
@@ -27,6 +28,7 @@
 (require 'moe-theme)
 
 (moe-dark)
+;;(moe-light)
 
 (global-set-key (kbd "C-c h w") 'whitespace-mode)
 (global-set-key (kbd "C-c h l") 'visual-line-mode)
@@ -71,13 +73,14 @@
 
 (setq rcirc-server-alist
       '(("irc.freenode.net" :port 6697 :encryption tls
-	 :channels ("#hsgr-cc" "#bash" "#supercollider" "##machinelearning"))))
+         :channels ("#hsgr-cc"))))
 ;; "#python" "#bash" "#emacs" "#emacs-beginners" "#archlinux" "#org-mode" "##learnpython" "#archlinux-greece" "#tmux" "#xterm" "#systemd" "#git" "#haskell-beginners" "#regex" "##machinelearning" "#archlinux-offtopic" "##philosophy" "##statistics" "#musicbrainz" "#esoteric" "#music-theory" "##logic" "#ai" "##music" "#archlinux-aur" "##cs" "##matlab" "#octave" "#archlinux-pacman" "#supercollider"))))
 ;;(setq rcirc-server-alist
 ;;      '(("irc.freenode.net" :channels ("#hsgr-cc" "#python" "#bash" "#emacs" "#emacs-beginners" "#archlinux" "#rirc" "#org-mode" "##learnpython" "#archlinux-greece" "#archlinux-newbie"))))
 
 ;; SCLANG
 (require 'sclang)
+(require 'w3m-load)
 ;;-- skeleton pair insertion for brackets and stuff
 (global-set-key "\"" 'skeleton-pair-insert-maybe)
 (global-set-key "\'" 'skeleton-pair-insert-maybe)
@@ -244,7 +247,7 @@ href=\"http://sachachua.com/blog/wp-content/themes/sacha-v3/foundation/css/found
    (R . t)
    (calc . t)
    (haskell . t)
-   (shell . t)
+   (sh . t) ;; (shell . t)
    (js . t)
    (ditaa . t)
    (org . t)
@@ -442,83 +445,6 @@ a sound to be played"
               "/usr/share/icons/gnome/32x32/status/appointment-soon.png" "/usr/share/sounds/gnome/default/alerts/glass.ogg"))
 (setq appt-disp-window-function (function djcb-appt-display))
 
-;;; Commentary
-;; https://github.com/punchagan/blog-files
-
-;;; Code:
-;; ====================
-;; ORG-PUBLISHING
-;; ====================
-;; multiple publishing projects
-;; http://lists.gnu.org/archive/html/emacs-orgmode/2009-10/msg00143.html
-(require 'ox-publish)
-;; http://stackoverflow.com/questions/9742836/how-do-i-format-the-postamble-in-html-export-with-org-mode
-(setq org-html-postamble-format
-      '(("en" "<p class=\"postamble\">Last Updated %d, <br>by %a. <br>Created by %c"</p>)))
-(setq org-publish-project-alist
-      '(
-        ("org-notes"               ;Used to export .org file
-         :base-directory "~/blog/"  ;directory holds .org files
-         :base-extension "org"     ;process .org file only
-         :publishing-directory "/ssh:gediapou@halava.cc.jyu.fi:/nashome3/gediapou/html/blog/";;"~/public_html/"    ;export destination
-                                        ;:publishing-directory "/ssh:aucotsi@larigot.avarts.ionio.gr:" ;export to server
-         :recursive t
-         :publishing-function org-html-publish-to-html
-         :headline-levels 4               ; Just the default for this project.
-         :auto-preamble t
-         :auto-sitemap t                  ; Generate sitemap.org automagically...
-         :sitemap-filename "sitemap.org"  ; ... call it sitemap.org (it's the default)...
-         :sitemap-title "Sitemap"         ; ... with title 'Sitemap'.
-         :export-creator-info t    ; Disable the inclusion of "Created by Org" in the postamble.
-         :export-author-info t     ; Disable the inclusion of "Author: Your Name" in the postamble.
-         :auto-postamble t         ; Disable auto postamble
-         :table-of-contents t        ; Set this to "t" if you want a table of contents, set to "nil" disables TOC.
-         :section-numbers nil        ; Set this to "t" if you want headings to have numbers.
-         :html-postamble t;"<p class=\"postamble\">Last Updated %d.</p> " ; your personal postamble
-         :style-include-default nil  ;Disable the default css style
-         :archived-trees t
-         )
-        ("org-static"                ;Used to publish static files
-         :base-directory "~/blog/"
-         :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
-         :publishing-directory "/ssh:gediapou@halava.cc.jyu.fi:/nashome3/gediapou/html/blog/";;"~/public_html/"
-         :recursive t
-         :publishing-function org-publish-attachment
-         )
-        ("org" :components ("org-notes" "org-static")) ;combine "org-static" and "org-static" into one function call
-
-        ;; BLOGGING
-        ("blog"
-         :components ("blog-content" "blog-static"))
-        ("blog-content"
-         :base-directory "~/src/blogposts/"
-         :base-extension "org"
-         :publishing-directory "/ssh:gediapou@halava.cc.jyu.fi:/nashome3/gediapou/html/blog/"
-         :recursive t
-         :publishing-function org-html-publish-to-html
-         :export-with-tags nil
-         :headline-levels 4             ; Just the default for this project.
-         :table-of-contents nil
-         :section-numbers nil
-         :sub-superscript nil
-         :todo-keywords nil
-         :author nil
-         :creator-info nil
-         :html-preamble "Georgios Diapoulis blog"
-         :html-postamble nil
-         :style "This is raw html for stylesheet <link>'s"
-         :timestamp t
-         :exclude-tags ("noexport" "todo")
-         :auto-preamble t)
-        ("blog-static"
-         :base-directory "~/src/blogposts/static/"
-         :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|otf"
-         :publishing-directory "/ssh:gediapou@halava.cc.jyu.fi:/nashome3/gediapou/html/blog/static/"
-         :recursive t
-         :publishing-function org-publish-attachment)
-        )
-      )
-
 ;; Org Publish to Stat Blog to Jekyll config Added 26 Mar 2015
 ;; http://orgmode.org/worg/org-tutorials/org-jekyll.html
 ;; Thanks to Ian Barton
@@ -551,6 +477,83 @@ a sound to be played"
         ("aucotsi" :components ("org-aucotsi" "org-static-aucotsi"))
 
         ))
+
+;;; Commentary
+;; https://github.com/punchagan/blog-files
+
+;;; Code:
+;; ====================
+;; ORG-PUBLISHING
+;; ====================
+;; multiple publishing projects
+;; http://lists.gnu.org/archive/html/emacs-orgmode/2009-10/msg00143.html
+(require 'ox-publish)
+;; http://stackoverflow.com/questions/9742836/how-do-i-format-the-postamble-in-html-export-with-org-mode
+(setq org-html-postamble-format
+      '(("en" "<p class=\"postamble\">Last Updated %d, <br>by %a. <br>Created by %c"</p>)))
+(setq org-publish-project-alist
+      '(
+        ("org-notes"               ;Used to export .org file
+         :base-directory "~/jyu/diary/"  ;directory holds .org files
+         :base-extension "org"     ;process .org file only
+         :publishing-directory "/ssh:gediapou@halava.cc.jyu.fi:/nashome3/gediapou/html/diary/";;"~/public_html/"    ;export destination
+                                        ;:publishing-directory "/ssh:aucotsi@larigot.avarts.ionio.gr:" ;export to server
+         :recursive t
+         :publishing-function org-html-publish-to-html
+         :headline-levels 4               ; Just the default for this project.
+         :auto-preamble t
+         :auto-sitemap t                  ; Generate sitemap.org automagically...
+         :sitemap-filename "sitemap.org"  ; ... call it sitemap.org (it's the default)...
+         :sitemap-title "Sitemap"         ; ... with title 'Sitemap'.
+         :export-creator-info t    ; Disable the inclusion of "Created by Org" in the postamble.
+         :export-author-info t     ; Disable the inclusion of "Author: Your Name" in the postamble.
+         :auto-postamble t         ; Disable auto postamble
+         :table-of-contents t        ; Set this to "t" if you want a table of contents, set to "nil" disables TOC.
+         :section-numbers nil        ; Set this to "t" if you want headings to have numbers.
+         :html-postamble t;"<p class=\"postamble\">Last Updated %d.</p> " ; your personal postamble
+         :style-include-default nil  ;Disable the default css style
+         :archived-trees t
+         )
+        ("org-static"                ;Used to publish static files
+         :base-directory "~/jyu/diary/"
+         :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
+         :publishing-directory "/ssh:gediapou@halava.cc.jyu.fi:/nashome3/gediapou/html/diary/";;"~/public_html/"
+         :recursive t
+         :publishing-function org-publish-attachment
+         )
+        ("org" :components ("org-notes" "org-static")) ;combine "org-static" and "org-static" into one function call
+
+       ;; BLOGGING
+       ("blog"
+        :components ("blog-content" "blog-static"))
+       ("blog-content"
+        :base-directory "~/jyu/diary/blogposts/"
+        :base-extension "org"
+        :publishing-directory "/ssh:gediapou@halava.cc.jyu.fi:/nashome3/gediapou/html/diary/"
+        :recursive t
+        :publishing-function org-html-publish-to-html
+        :export-with-tags nil
+        :headline-levels 4             ; Just the default for this project.
+        :table-of-contents nil
+        :section-numbers nil
+        :sub-superscript nil
+        :todo-keywords nil
+        :author nil
+        :creator-info nil
+        :html-preamble "Georgios Diapoulis blog"
+        :html-postamble nil
+        :style "This is raw html for stylesheet <link>'s"
+        :timestamp t
+        :exclude-tags ("noexport" "todo")
+        :auto-preamble t)
+       ("blog-static"
+        :base-directory "~/jyu/diary/blogposts/static/"
+        :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|otf"
+        :publishing-directory "/ssh:gediapou@halava.cc.jyu.fi:/nashome3/gediapou/html/diary/static/"
+        :recursive t
+        :publishing-function org-publish-attachment)
+       )
+      )
 
 ;; (add-to-list 'load-path
 ;;              (expand-file-name "~/sources/org-mode/contrib/lisp"
